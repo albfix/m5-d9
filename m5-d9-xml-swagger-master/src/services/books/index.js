@@ -26,9 +26,25 @@ booksRouter.get("/", async (req, res, next) => {
     next(err)
   }
 })
-booksRouter.get("/xml/sumTwoPrices", (req, res, next) => {//////QUESTO STO FACENDO ORA CON RECORDED LESSON
 
-  console.log(req.query)
+/////////////////////////////////////////////////////////////// //////QUESTO STO FACENDO ORA CON RECORDED LESSON/////////////////////////////
+booksRouter.get("/xml/sumTwoPrices", async (req, res, next) => {
+
+  //console.log(req.query)
+  try {
+    const books = await readDB(booksJsonPath)
+    const book = books.find((book) => book.asin === req.params.asin)
+    if (book) {
+      res.send(book)
+    } else {
+      const error = new Error()
+      error.httpStatusCode = 404
+      next(error)
+    }
+  } catch (error) {
+    console.log(error)
+    next("While reading books list a problem occurred!")
+  }
 
 
   res.send('ok')
@@ -40,6 +56,7 @@ booksRouter.get("/:asin", async (req, res, next) => {
     const book = books.find((b) => b.asin === req.params.asin)
     if (book) {
       res.send(book)
+      console.log(book)
     } else {
       const error = new Error()
       error.httpStatusCode = 404
