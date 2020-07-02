@@ -18,12 +18,20 @@ booksRouter.get("/", async (req, res, next) => {
   try {
     const data = await readDB(booksJsonPath)
 
+    console.log(data)
     res.send({ numberOfItems: data.length, data })
   } catch (error) {
     console.log(error)
     const err = new Error("While reading books list a problem occurred!")
     next(err)
   }
+})
+booksRouter.get("/xml/sumTwoPrices", (req, res, next) => {//////QUESTO STO FACENDO ORA CON RECORDED LESSON
+
+  console.log(req.query)
+
+
+  res.send('ok')
 })
 
 booksRouter.get("/:asin", async (req, res, next) => {
@@ -147,18 +155,5 @@ booksRouter.get("/export/csv", (req, res, next) => {
   }
 })
 
-booksRouter.get("/xml/sumTwoPrices", (req, res, next) => {
-  console.log(req.query)
-
-
-
-
-
-
-
-
-
-  res.send('orsk')
-})
 
 module.exports = booksRouter
