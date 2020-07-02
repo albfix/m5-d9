@@ -21,6 +21,8 @@ router.get("/", async (req, res, next) => {
   }
 })
 
+router.get('')
+
 router.get("/convertLowerCaseWithToken", async (req, res, next) => {
   try {
     const { string, token } = req.query

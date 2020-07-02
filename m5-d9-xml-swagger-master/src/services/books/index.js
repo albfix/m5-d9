@@ -147,4 +147,18 @@ booksRouter.get("/export/csv", (req, res, next) => {
   }
 })
 
+booksRouter.get("/xml/sumTwoPrices", (req, res, next) => {
+  console.log(req.query)
+
+
+
+
+
+
+
+
+
+  res.send('orsk')
+})
+
 module.exports = booksRouter
