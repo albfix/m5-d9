@@ -1,0 +1,208 @@
+openapi: 3.0.1
+info:
+  title: StriveBooks API
+  description: StriveBooks API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3002
+    description: Local server
+tags:
+  - name: books
+    description: Operations about books
+  - name: files
+    description: Operations about files
+paths:
+  /books:
+    get:
+      tags:
+        - books
+      summary: Returns a list of books.
+      description: Optional extended description
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Filter books list by category
+      responses:
+        "200": # status code
+          description: A list of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Book"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags:
+        - books
+      description: Adds a new book
+      requestBody:
+        description: The object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Book"
+      responses:
+        "201": # status code
+          description: The ID of the newly created book
+          content:
+            application/json:
+              schema:
+                type: string
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /books/{id}:
+    get:
+      tags:
+        - books
+      summary: blabla
+      description: Retrieve single Book
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the Book to retrieve
+      responses:
+        "200": # status code
+          description: The single Book
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+        - books
+      description: Update an existing Book
+      summary: Update
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the Book to update
+      requestBody:
+        description: Fields to update
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Book"
+      responses:
+        "200": # status code
+          description: A list of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Book"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags:
+        - books
+      description: Delete a specific Book by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the Book to delete
+      responses:
+        "200": # status code
+          description: The single Book
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /books/upload:
+    post:
+      tags:
+        - books
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        "200": # status code
+          description: The single user
+          content:
+            application/json:
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /books/export/csv:
+    get:
+      tags:
+        - books
+      responses:
+        "200":
+          description: OK
+          content:
+            text/csv:
+              example: asin, title, price, category
+  /files/{name}/download:
+    get:
+      tags:
+        - files
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            img/png:
+              example: >
+components:
+  responses:
+    NotFound:
+      description: The specific resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: Bearer token missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    Book:
+      type: object
+      properties:
+        asin:
+          type: string
+        title:
+          type: string
+        img:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
